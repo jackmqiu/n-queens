@@ -139,15 +139,16 @@
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) { // receive column of first piece
       var size = this.get('n'); // width of board
+      var colIndex;
       var counter = 0;
 
       // iterate through board
       for (var i = 0; i < size; i++) {
-        var colIndex = majorDiagonalColumnIndexAtFirstRow + i;
-        if (this.get(i)[colIndex]) {
+        colIndex = majorDiagonalColumnIndexAtFirstRow + i; // set column index to equal i + colIndex that we passed
+        if (this.get(i)[colIndex]) { // if value > 0, increment counter
           counter++
         }
-        if (counter > 1) {
+        if (counter > 1) { // returns true if there is a conflict
           return true
         }
       }
@@ -159,7 +160,7 @@
       var size = this.get('n'); // get size of the board
 
       // iterate through board
-      for (var i = 1 - size; i < size; i++) { // set starting position at negative bounds.
+      for (var i = 1 - size; i < size; i++) { // set starting position at negative bounds
         if (this.hasMajorDiagonalConflictAt(i)) {
           return true;
         }
@@ -173,15 +174,16 @@
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       var size = this.get('n'); // width of board
+      var colIndex;
       var counter = 0;
 
       // iterate through board
       for (var i = 0; i < size; i++) {
-        var colIndex = minorDiagonalColumnIndexAtFirstRow - i;
-        if (this.get(i)[colIndex]) {
+        colIndex = minorDiagonalColumnIndexAtFirstRow - i;  // set column index to equal colIndex - i
+        if (this.get(i)[colIndex]) { // if value > 0 increment counter
           counter++
         }
-        if (counter > 1) {
+        if (counter > 1) { // returns true if there is a conflict
           return true
         }
       }
