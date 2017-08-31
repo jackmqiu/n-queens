@@ -142,6 +142,7 @@
       var colIndex;
       var counter = 0;
 
+
       // iterate through board
       for (var i = 0; i < size; i++) {
         colIndex = majorDiagonalColumnIndexAtFirstRow + i; // set column index to equal i + colIndex that we passed
