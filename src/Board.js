@@ -81,8 +81,8 @@
     hasRowConflictAt: function(rowIndex) {
       var row = this.get(rowIndex);
       var len = row.length;
-      var counter = 0; 
-      
+      var counter = 0;
+
       for (var i = 0; i < len; i++) {
         counter += row[i];
       }
@@ -92,8 +92,9 @@
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
       var rows = this.rows();
-      // console.log(this.row());
-      for (var i = 0; i < rows.length; i++) {
+      var len = rows.length;
+
+      for (var i = 0; i < len; i++) {
       //loop through this.rows()
         if (this.hasRowConflictAt(i)) {
         //run hasRowConflictAt on each row
@@ -110,18 +111,20 @@
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
       var rows = this.rows();
-      var count = 0;
-      for (var i = 0; i < rows.length; i++) {
-        count += rows[i][colIndex];
+      var len = rows.length;
+      var counter = 0;
+
+      for (var i = 0; i < len; i++) {
+        counter += rows[i][colIndex];
       }
-      return count > 1;
+      return counter > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
       // hasAnyColflicts for all column index;
-      var column = this.get(0).length;
-      for (var i = 0; i < column; i++) {
+      var size = this.get('n')
+      for (var i = 0; i < size; i++) {
         if (this.hasColConflictAt(i)) {
           return true;
         }
@@ -130,29 +133,22 @@
     },
 
 
-
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {//receive column of first piece
-      
-      var width = this.get(0).length; // width of board
-      var diagonalLength; //diagonal movements until off board from first piece
-      
-      for (var i = 0; i < width; i++) { // looping through rows until we find first piece
-        if (this.get(i)[majorDiagonalColumnIndexAtFirstRow]) { // if row contains piece
-          if (i > majorDiagonalColumnIndexAtFirstRow) { // if row index is greater than column index
-            diagonalLength = width - i; // 
-          } else {
-            diagonalLength = width - majorDiagonalColumnIndexAtFirstRow;
-          }
-          
-          for (var j = 1; j < diagonalLength; j++) {
-            if (this.get(i + j)[majorDiagonalColumnIndexAtFirstRow + j] === 1) {
-              return true;
-            }
-          }
+    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) { // receive column of first piece
+      var size = this.get('n'); // width of board
+      var counter = 0;
+
+      // iterate through board
+      for (var i = 0; i < size; i++) {
+        var colIndex = majorDiagonalColumnIndexAtFirstRow + i;
+        if (this.get(i)[colIndex]) {
+          counter++
+        }
+        if (counter > 1) {
+          return true
         }
       }
       return false;
@@ -160,46 +156,33 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      var height = this.get(0).length;
-      var width = height;
-      
-      for (var i = 0; i < height; i++) {
-        for (var j = 0; j < width; j++) {
-          if (this.get(i)[j] === 1) {
-            if (this.hasMajorDiagonalConflictAt(j)) {
-              return true;
-            }
-          }  
+      var size = this.get('n'); // get size of the board
+
+      // iterate through board
+      for (var i = 1 - size; i < size; i++) { // set starting position at negative bounds.
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
         }
       }
       return false;
     },
-
-
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      // loop through rows until find chess piece
-      var height = this.get(0).length;
-      var width = height;
-      var diagonalLength;
-    
-      for (var i = 0; i < width; i++) { //loop through rows
-        if (this.get(i)[minorDiagonalColumnIndexAtFirstRow]) { //if firstPiece is in this row
-          if ((width - i) > (minorDiagonalColumnIndexAtFirstRow + 1)) {
-            diagonalLength = minorDiagonalColumnIndexAtFirstRow + 1;
-          } else {
-            diagonalLength = width - i;
-          }
-          
-          for (var j = 1; j < diagonalLength; j++) {
-            if (this.get(i + j)[minorDiagonalColumnIndexAtFirstRow - j] === 1) {
-              return true;
-            }
-          }
+      var size = this.get('n'); // width of board
+      var counter = 0;
+
+      // iterate through board
+      for (var i = 0; i < size; i++) {
+        var colIndex = minorDiagonalColumnIndexAtFirstRow - i;
+        if (this.get(i)[colIndex]) {
+          counter++
+        }
+        if (counter > 1) {
+          return true
         }
       }
       return false;
@@ -207,16 +190,12 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      var height = this.get(0).length;
-      var width = height;
-      
-      for (var i = 0; i < height; i++) { // loop through the rows
-        for (var j = width - 1; j > 0; j--) { // loop through
-          if (this.get(i)[j] === 1) {
-            if (this.hasMinorDiagonalConflictAt(j)) {
-              return true;
-            }
-          }  
+      var size = this.get('n'); // get size of the board
+
+      // iterate through board
+      for (var i = size*2; i > 0; i--) { // set starting position at positve bounds
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
         }
       }
       return false;
