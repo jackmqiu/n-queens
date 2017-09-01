@@ -123,7 +123,7 @@
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
       // hasAnyColflicts for all column index;
-      var size = this.get('n')
+      var size = this.get('n');
       for (var i = 0; i < size; i++) {
         if (this.hasColConflictAt(i)) {
           return true;
@@ -147,10 +147,10 @@
       for (var i = 0; i < size; i++) {
         colIndex = majorDiagonalColumnIndexAtFirstRow + i; // set column index to equal i + colIndex that we passed
         if (this.get(i)[colIndex]) { // if value > 0, increment counter
-          counter++
+          counter++;
         }
         if (counter > 1) { // returns true if there is a conflict
-          return true
+          return true;
         }
       }
       return false;
@@ -182,10 +182,10 @@
       for (var i = 0; i < size; i++) {
         colIndex = minorDiagonalColumnIndexAtFirstRow - i;  // set column index to equal colIndex - i
         if (this.get(i)[colIndex]) { // if value > 0 increment counter
-          counter++
+          counter++;
         }
         if (counter > 1) { // returns true if there is a conflict
-          return true
+          return true;
         }
       }
       return false;
@@ -196,7 +196,7 @@
       var size = this.get('n'); // get size of the board
 
       // iterate through board
-      for (var i = size*2; i > 0; i--) { // set starting position at positve bounds
+      for (var i = size * 2; i > 0; i--) { // set starting position at positve bounds
         if (this.hasMinorDiagonalConflictAt(i)) {
           return true;
         }

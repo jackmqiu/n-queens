@@ -23,7 +23,7 @@ window.findNRooksSolution = function(n) {
 
   // store all possible n in solutions in array, rooks -> must be placed diagonally
   for (var i = 0; i < n; i++) {
-    chessBoard.togglePiece(i, i)
+    chessBoard.togglePiece(i, i);
     solution.push(chessBoard.attributes[i]);
   }
 
@@ -31,50 +31,67 @@ window.findNRooksSolution = function(n) {
   return solution;
 };
 
+window.indexToRow = function(index, n) {
+  return Math.floor((index - 1) / n);
+};
+
+window.indexToColumn = function(index, n) {
+  return (index - 1) % n;
+};
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   var chessBoard = new Board({n:n});
   var solutionCount = 0;
-
-  //     0 1 2 3
-  // 0: [1,0,0,0]
-  // 1: [0,1,0,0]
-  // 2: [0,0,1,0]
-  // 3: [0,0,0,1]
-
-
-  for (var i = 0; i < chessBoard.get('n'); i++) {
-    chessBoard.get(i).forEach(function(el) {
-      if (el === 1) {
-        solutionCount++;
-      }
-    });
-  }
-
-  var traverse = function(col, row) {
-    // place a piece
-    // //loop rows
-    // for (var x = i; x < n; x++) {
-    // //loop columns
-    //   for (var y = j; y < n; y++) {
-    //     solution.togglePiece(x, y);
-    //     if (solution.hasAnyRowConflicts()) {
-    //       solution.togglePiece(x, y);
-    //     } else {
-    //       //worry about x or y too big
-    //       insertingPiece(x + 1, y);
-    //     }
-    //   }
-    //   //worry about y too big
-    // }
-    //worry about x too big
-    // does it pass the test?
-    // if pass place another piece on board at next location
-    // if doesn't pass, and the piece not at the end
-    // then pop the piece and place at next location
-    // if doesn't pass and piece is at the end, then pop 2 piece
-
+  
+  var addRook = function(array, n, x, y) {
+    // Base case:
+    // arr[0] === 16 return
+    if (array[0] === n * n) {
+      return;
     }
+    
+    // loop through the board nxn; set i = arr[arr.len]
+    for (var i = array[array.length - 1] + 1 || 1; i < n * n; i++) {
+      if (chessBoard.hasAnyRooksConflicts()) {
+        array.pop();
+        chessBoard.togglePiece(x, y);
+      }
+      
+      x = window.indexToRow(i, n);
+      y = window.indexToColumn(i, n);
+      
+      array.push(i); //recording the piece
+      chessBoard.togglePiece(x, y); //adding the piece
+      
+      if (chessBoard.hasAnyRooksConflicts()) {
+        if (array[array.length - 1] !== n * n) { //last is 16 and its failing)
+          addRook(array, n, x, y); 
+        } else {
+          array.pop();
+          array[array.length - 1] += 1;
+          addRook(array, n, x, y);
+        }
+        array.pop();
+        chessBoard.togglePiece(x, y);        
+      } else if (array.length === n) {
+        array.pop();
+        array[array.length - 1] += 1;
+        addRook(array, n, x, y);
+      }
+    }
+    
+    // found a solution after adding 4th piece, and 4th piece is not at 16
+    if (array.length === n) {
+      solutionCount++;
+      array.pop();
+      array[array.length - 1] += 1;
+      
+      addRook(array, n, x, y);
+    } 
+  
+  };
+  
+  addRook([], n, 0, 0);
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
